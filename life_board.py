@@ -87,3 +87,6 @@ class LifeBoard:
         result = array_compute_new_state(self.board, neighbours)
 
         return result
+
+    def update(self):
+        self._board = self.get_next_board()

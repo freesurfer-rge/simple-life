@@ -230,3 +230,52 @@ class TestGetNextBoardWrap:
         assert nxt[1, 2] == 1
         assert nxt[2, 2] == 1
         assert nxt[3, 2] == 1
+
+
+class TestUpdate:
+    def test_2x2square(self):
+        nx = 3
+        ny = 3
+
+        lb = LifeBoard(nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP)
+        lb.set_cells([(0, 0), (1, 0), (0, 1), (1, 1)])
+
+        lb.update()
+        lb.update()
+
+        expected = np.asarray([[1, 1, 0], [1, 1, 0], [0, 0, 0]], dtype=np.int8)
+        assert np.array_equal(expected, lb.board)
+
+    def test_rotor(self):
+        nx = 5
+        ny = 5
+
+        lb = LifeBoard(nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP)
+        # Rotor points left-right
+        lb.set_cells([(1, 2), (2, 2), (3, 2)])
+
+        lb.update()
+        expected = np.asarray(
+            [
+                [0, 0, 0, 0, 0],
+                [0, 0, 1, 0, 0],
+                [0, 0, 1, 0, 0],
+                [0, 0, 1, 0, 0],
+                [0, 0, 0, 0, 0],
+            ],
+            dtype=np.int8,
+        )
+        assert np.array_equal(expected, lb.board)
+
+        lb.update()
+        expected = np.asarray(
+            [
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+            ],
+            dtype=np.int8,
+        )
+        assert np.array_equal(expected, lb.board)
