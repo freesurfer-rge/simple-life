@@ -4,11 +4,6 @@ from boundary_conditions import BoundaryConditions
 from life_board import LifeBoard
 
 
-def print_as_board(arr: np.ndarray):
-    for i in range(arr.shape[0] - 1, 0 - 1, -1):
-        print(arr[i, :])
-
-
 class TestBasic:
     def test_constructor(self):
         lb = LifeBoard(32, 64, BoundaryConditions.EMPTY, BoundaryConditions.WRAP)
