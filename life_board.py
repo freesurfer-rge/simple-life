@@ -15,7 +15,9 @@ def compute_new_state(current_state: np.int8, neighbour_count: np.int8):
 
     return new_state
 
+
 array_compute_new_state = np.frompyfunc(compute_new_state, 2, 1)
+
 
 class LifeBoard:
     def __init__(
