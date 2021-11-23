@@ -1,9 +1,9 @@
 # Adapted from
 # https://towardsdatascience.com/from-scratch-the-game-of-life-161430453ee3
 
-# Processes Life rules for a sparse board
+# Processes Life rules for a board store as a spare set of active cells
 
-from typing import Callable, Dict, Set, Tuple
+from typing import Callable, Dict, List, Set, Tuple
 
 
 class SparseSetRules:
@@ -13,7 +13,7 @@ class SparseSetRules:
         x_max: int,
         y_max: int,
         get_neighbours: Callable[
-            [Tuple[int, int], int, int], Set[Tuple[int, int]]
+            [Tuple[int, int], int, int], List[Tuple[int, int]]
         ],
     ) -> Set[Tuple[int, int]]:
         # grid = state.grid
