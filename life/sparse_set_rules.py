@@ -25,7 +25,7 @@ class SparseSetRules:
             if elem not in counter:
                 counter[elem] = 0
 
-            nb = get_neighbours(elem, x_max, y_max)
+            nb: List[Tuple[int, int]] = get_neighbours(elem, x_max, y_max)
 
             for n in nb:
                 if n not in counter:
