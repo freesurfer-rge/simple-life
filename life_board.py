@@ -51,7 +51,9 @@ class SparseSetState:
     def apply_rules(self, rules, x_size, y_size):
         # Calls the actual rules and provides them with the grid
         # and the neighbour function
-        self.grid = rules.apply_rules(self.grid, x_size, y_size, self.get_neighbours)
+        self.grid = rules.apply_rules(
+            self.grid, x_size, y_size, self.get_neighbours
+        )
         return self
 
 

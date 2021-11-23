@@ -6,7 +6,9 @@ from life_board import LifeBoard
 
 class TestBasic:
     def test_constructor(self):
-        lb = LifeBoard(32, 64, BoundaryConditions.EMPTY, BoundaryConditions.WRAP)
+        lb = LifeBoard(
+            32, 64, BoundaryConditions.EMPTY, BoundaryConditions.WRAP
+        )
 
         assert isinstance(lb.board, np.ndarray)
         assert lb.board.shape == (64, 32)  # C style ordering
@@ -17,7 +19,9 @@ class TestBasic:
     def test_simple_set(self):
         nx = 2
         ny = 3
-        lb = LifeBoard(nx, ny, BoundaryConditions.EMPTY, BoundaryConditions.EMPTY)
+        lb = LifeBoard(
+            nx, ny, BoundaryConditions.EMPTY, BoundaryConditions.EMPTY
+        )
         assert np.all(lb.board == 0)
 
         lb.set_cells([(0, 1)])
@@ -32,7 +36,9 @@ class TestBasic:
         nx = 2
         ny = 3
 
-        lb = LifeBoard(nx, ny, BoundaryConditions.EMPTY, BoundaryConditions.EMPTY)
+        lb = LifeBoard(
+            nx, ny, BoundaryConditions.EMPTY, BoundaryConditions.EMPTY
+        )
         assert np.all(lb.board == 0)
 
         lb.set_cells([(0, 1), (0, 0)])
@@ -44,7 +50,9 @@ class TestBasic:
         nx = 3
         ny = 4
 
-        lb = LifeBoard(nx, ny, BoundaryConditions.EMPTY, BoundaryConditions.EMPTY)
+        lb = LifeBoard(
+            nx, ny, BoundaryConditions.EMPTY, BoundaryConditions.EMPTY
+        )
         assert np.all(lb.board == 0)
         lb.set_cells([[0, 1], [1, 2], [0, 3]])
         assert lb.board[1, 0] == 1
@@ -58,7 +66,9 @@ class TestShiftForNeighboursWrap:
         nx = 3
         ny = 2
 
-        lb = LifeBoard(nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP)
+        lb = LifeBoard(
+            nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP
+        )
         lb.set_cells([(0, 1), (1, 1)])
 
         # Looking at increasing x
@@ -79,7 +89,9 @@ class TestShiftForNeighboursWrap:
         nx = 2
         ny = 3
 
-        lb = LifeBoard(nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP)
+        lb = LifeBoard(
+            nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP
+        )
         lb.set_cells([(0, 1), (0, 2)])
 
         # Look at decreasing y, should have two cells with neighbours
@@ -100,7 +112,9 @@ class TestShiftForNeighboursWrap:
         nx = 3
         ny = 3
 
-        lb = LifeBoard(nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP)
+        lb = LifeBoard(
+            nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP
+        )
         lb.set_cells([(0, 0), (0, 1), (1, 0), (1, 1)])
 
         # Both positive
@@ -145,7 +159,9 @@ class TestGetNeighbourCountsWrap:
         nx = 5
         ny = 5
 
-        lb = LifeBoard(nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP)
+        lb = LifeBoard(
+            nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP
+        )
         lb.set_cells([(2, 2)])
 
         counts = lb.get_neighbour_counts()
@@ -163,7 +179,9 @@ class TestGetNeighbourCountsWrap:
         nx = 3
         ny = 2
 
-        lb = LifeBoard(nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP)
+        lb = LifeBoard(
+            nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP
+        )
         lb.set_cells([(0, 1), (1, 1)])
 
         counts = lb.get_neighbour_counts()
@@ -178,7 +196,9 @@ class TestGetNeighbourCountsWrap:
         nx = 3
         ny = 3
 
-        lb = LifeBoard(nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP)
+        lb = LifeBoard(
+            nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP
+        )
         lb.set_cells([(0, 1), (1, 1)])
 
         counts = lb.get_neighbour_counts()
@@ -198,7 +218,9 @@ class TestGetNextBoardWrap:
         nx = 3
         ny = 3
 
-        lb = LifeBoard(nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP)
+        lb = LifeBoard(
+            nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP
+        )
         lb.set_cells([(0, 0)])
 
         next = lb.get_next_board()
@@ -208,7 +230,9 @@ class TestGetNextBoardWrap:
         nx = 3
         ny = 3
 
-        lb = LifeBoard(nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP)
+        lb = LifeBoard(
+            nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP
+        )
         lb.set_cells([(0, 0), (1, 0), (0, 1), (1, 1)])
 
         nxt = lb.get_next_board()
@@ -219,7 +243,9 @@ class TestGetNextBoardWrap:
         nx = 5
         ny = 5
 
-        lb = LifeBoard(nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP)
+        lb = LifeBoard(
+            nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP
+        )
         # Rotor points left-right
         lb.set_cells([(1, 2), (2, 2), (3, 2)])
 
@@ -237,7 +263,9 @@ class TestUpdate:
         nx = 3
         ny = 3
 
-        lb = LifeBoard(nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP)
+        lb = LifeBoard(
+            nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP
+        )
         lb.set_cells([(0, 0), (1, 0), (0, 1), (1, 1)])
 
         lb.update()
@@ -250,7 +278,9 @@ class TestUpdate:
         nx = 5
         ny = 5
 
-        lb = LifeBoard(nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP)
+        lb = LifeBoard(
+            nx, ny, BoundaryConditions.WRAP, BoundaryConditions.WRAP
+        )
         # Rotor points left-right
         lb.set_cells([(1, 2), (2, 2), (3, 2)])
 

@@ -12,7 +12,9 @@ class SparseSetRules:
         grid: Set[Tuple[int, int]],
         x_max: int,
         y_max: int,
-        get_neighbours: Callable[[Tuple[int, int], int, int], Set[Tuple[int, int]]],
+        get_neighbours: Callable[
+            [Tuple[int, int], int, int], Set[Tuple[int, int]]
+        ],
     ) -> Set[Tuple[int, int]]:
         # grid = state.grid
         counter: Dict[Tuple[int, int], int] = {}
