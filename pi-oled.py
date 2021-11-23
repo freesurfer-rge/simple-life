@@ -82,7 +82,9 @@ draw.rectangle((0, 0, width, height), outline=0, fill=0)
 rules = SparseSetRules()
 state = SparseSetState(convert_to_tuples(simkin_gun, 60, 8))
 # state = SparseSetState(glider)
-board = LifeBoard(state, rules, disp.width, disp.height, x_wrap=True, y_wrap=True)
+board = LifeBoard(
+    state, rules, disp.width, disp.height, x_wrap=True, y_wrap=True
+)
 
 print(board.state.to_dense(disp.width, disp.height))
 
