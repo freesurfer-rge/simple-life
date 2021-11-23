@@ -96,4 +96,4 @@ while True:
     disp.image(image)
     disp.show()
 
-    time.sleep(1)
+    # time.sleep(1)
