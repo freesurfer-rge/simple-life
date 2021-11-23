@@ -15,4 +15,4 @@ print(board.state.to_dense(nx, ny))
 for _ in range(16):
     print("\n--\n")
     board.update()
-    print(board.state.to_dense(nx,ny))
+    print(board.state.to_dense(nx, ny))
