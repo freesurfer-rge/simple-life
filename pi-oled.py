@@ -14,13 +14,13 @@ from life_board import LifeBoard, SparseSetRules, SparseSetState
 np.set_printoptions(threshold=sys.maxsize, linewidth=300)
 
 # Define the simple rotor
-rotor = [
+rotor = {
     (16,16),(17,16),(18,16)
-    ]
+    }
 
-glider = [
-    (10,10),(11,10),(12,10),(12,11),(11,12)
-    ]
+glider = {
+    (10,11),(11,11),(12,11),(12,12),(11,13)
+    }
 
 simkin_gun = [
     "OO.....OO........................",
@@ -83,7 +83,9 @@ draw = ImageDraw.Draw(image)
 draw.rectangle((0, 0, width, height), outline=0, fill=0)
 
 rules=SparseSetRules()
-board = LifeBoard(SparseSetState(convert_to_tuples(simkin_gun,30,10)), rules, disp.width, disp.height)
+state = SparseSetState(convert_to_tuples(simkin_gun,30,10))
+state = SparseSetState(glider)
+board = LifeBoard(state, rules, disp.width, disp.height)
 
 
 while True:
