@@ -10,7 +10,7 @@ from PIL import Image, ImageDraw
 import adafruit_ssd1306
 
 import numpy as np
-from life_board import LifeBoard, SparseSetRules, SparseSetState
+from life import LifeBoard, SparseSetRules, SparseSetState
 
 np.set_printoptions(threshold=sys.maxsize, linewidth=300)
 
@@ -80,18 +80,23 @@ draw = ImageDraw.Draw(image)
 draw.rectangle((0, 0, width, height), outline=0, fill=0)
 
 rules = SparseSetRules()
-state = SparseSetState(convert_to_tuples(simkin_gun, 30, 10))
-state = SparseSetState(glider)
-board = LifeBoard(state, rules, disp.width, disp.height)
+state = SparseSetState(convert_to_tuples(simkin_gun, 60, 8))
+# state = SparseSetState(glider)
+board = LifeBoard(state, rules, disp.width, disp.height, x_wrap=True, y_wrap=True)
 
+print(board.state.to_dense(disp.width, disp.height))
+
+image = Image.new("1", (width, height))
+for c in board.state.grid:
+    image.putpixel((c[0], c[1]), 1)
+disp.image(image)
+disp.show()
 
 while True:
-    board.run_game()
+    board.update()
 
     image = Image.new("1", (width, height))
     for c in board.state.grid:
         image.putpixel((c[0], c[1]), 1)
     disp.image(image)
     disp.show()
-
-    # time.sleep(1)
