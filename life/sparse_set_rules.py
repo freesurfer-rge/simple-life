@@ -8,7 +8,11 @@ from typing import Set, Func, Tuple
 
 class SparseSetRules:
     def apply_rules(
-        self, grid: Set(Tuple[int, int]), x_max: int, y_max: int, get_neighbours
+        self,
+        grid: Set(Tuple[int, int]),
+        x_max: int,
+        y_max: int,
+        get_neighbours: Func[Set[Tuple[int, int]], Tuple[int, int], int.int],
     ):
         # grid = state.grid
         counter = {}
