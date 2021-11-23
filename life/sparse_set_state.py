@@ -19,34 +19,36 @@ class SparseSetState:
         return SparseSetState(copy(self.grid))
 
     def get_neighbours(
-        self, elem: Tuple[int, int], x_size: int, y_size: int
+        self,
+        elem: Tuple[int, int],
+        x_size: int,
+        y_size: int,
+        x_wrap: bool = False,
+        y_wrap: bool = False,
     ) -> List[Tuple[int, int]]:
         # Returns the neighbours of a live cell if they lie
         # within the bounds of the grid specified
         l: List[Tuple[int, int]] = []
-        if elem[0] - 1 >= 0:
-            l.append((elem[0] - 1, elem[1]))
 
-        if elem[0] - 1 >= 0 and elem[1] - 1 >= 0:
-            l.append((elem[0] - 1, elem[1] - 1))
+        steps = [-1, 0, 1]
+        for dx in steps:
+            x_neighbour_pos = elem[0] + dx
+            if x_wrap:
+                x_neighbour_pos = x_neighbour_pos % x_size
+            for dy in steps:
+                if dx == 0 and dy == 0:
+                    continue
+                y_neighbour_pos = elem[1] + dy
+                if y_wrap:
+                    y_neighbour_pos = y_neighbour_pos % y_size
 
-        if elem[0] - 1 >= 0 and elem[1] + 1 < y_size:
-            l.append((elem[0] - 1, elem[1] + 1))
-
-        if elem[1] - 1 >= 0:
-            l.append((elem[0], elem[1] - 1))
-
-        if elem[1] - 1 >= 0 and elem[0] + 1 < x_size:
-            l.append((elem[0] + 1, elem[1] - 1))
-
-        if elem[1] + 1 < y_size:
-            l.append((elem[0], elem[1] + 1))
-
-        if elem[0] + 1 < x_size:
-            l.append((elem[0] + 1, elem[1]))
-
-        if elem[1] + 1 < y_size and elem[0] + 1 < x_size:
-            l.append((elem[0] + 1, elem[1] + 1))
+                if (
+                    x_neighbour_pos >= 0
+                    and x_neighbour_pos < x_size
+                    and y_neighbour_pos >= 0
+                    and y_neighbour_pos < y_size
+                ):
+                    l.append((x_neighbour_pos, y_neighbour_pos))
 
         return l
 
@@ -56,12 +58,17 @@ class SparseSetState:
         return self.grid == other.grid
 
     def apply_rules(
-        self, rules: "SparseSetRules", x_size: int, y_size: int
+        self,
+        rules: "SparseSetRules",
+        x_size: int,
+        y_size: int,
+        x_wrap: bool = False,
+        y_wrap: bool = False,
     ) -> "SparseSetState":
         # Calls the actual rules and provides them with the grid
         # and the neighbour function
         self.grid = rules.apply_rules(
-            self.grid, x_size, y_size, self.get_neighbours
+            self.grid, x_size, y_size, self.get_neighbours, x_wrap, y_wrap
         )
         return self
 

@@ -13,8 +13,10 @@ class SparseSetRules:
         x_max: int,
         y_max: int,
         get_neighbours: Callable[
-            [Tuple[int, int], int, int], List[Tuple[int, int]]
+            [Tuple[int, int], int, int, bool, bool], List[Tuple[int, int]]
         ],
+        x_wrap: bool = False,
+        y_wrap: bool = False
     ) -> Set[Tuple[int, int]]:
         # grid = state.grid
         counter: Dict[Tuple[int, int], int] = {}
@@ -25,7 +27,7 @@ class SparseSetRules:
             if elem not in counter:
                 counter[elem] = 0
 
-            nb: List[Tuple[int, int]] = get_neighbours(elem, x_max, y_max)
+            nb: List[Tuple[int, int]] = get_neighbours(elem, x_max, y_max, x_wrap, y_wrap)
 
             for n in nb:
                 if n not in counter:
