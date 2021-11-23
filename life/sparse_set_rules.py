@@ -3,19 +3,19 @@
 
 # Processes Life rules for a sparse board
 
-from typing import Set, Func, Tuple
+from typing import Callable, Dict, Set, Tuple
 
 
 class SparseSetRules:
     def apply_rules(
         self,
-        grid: Set(Tuple[int, int]),
+        grid: Set[Tuple[int, int]],
         x_max: int,
         y_max: int,
-        get_neighbours: Func[Set[Tuple[int, int]], Tuple[int, int], int.int],
-    ):
+        get_neighbours: Callable[[Tuple[int, int], int, int], Set[Tuple[int, int]]],
+    ) -> Set[Tuple[int, int]]:
         # grid = state.grid
-        counter = {}
+        counter: Dict[Tuple[int, int], int] = {}
 
         # Find all neighbours to active cells
         # and their counts of active cells
