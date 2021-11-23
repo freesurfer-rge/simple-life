@@ -10,8 +10,7 @@ from PIL import Image, ImageDraw
 import adafruit_ssd1306
 
 import numpy as np
-from life_board import LifeBoard
-from boundary_conditions import BoundaryConditions
+from life_board import LifeBoard, SparseSetRules, SparseSetState
 np.set_printoptions(threshold=sys.maxsize, linewidth=300)
 
 # Define the simple rotor
@@ -51,11 +50,11 @@ simkin_gun = [
 def convert_to_tuples(array_of_strings, offset_x, offset_y):
     lengths = [len(s) for s in array_of_strings]
     assert np.all(np.asarray(lengths)==lengths[0])
-    tuples=[]
+    tuples=set()
     for j in range(len(array_of_strings)):
         for i in range(lengths[0]):
             if array_of_strings[j][i]=='O':
-                tuples.append((i+offset_x, j+offset_y))
+                tuples.add((i+offset_x, j+offset_y))
     return tuples
 
 
@@ -83,21 +82,18 @@ draw = ImageDraw.Draw(image)
 # Draw a black filled box to clear the image.
 draw.rectangle((0, 0, width, height), outline=0, fill=0)
 
+rules=SparseSetRules()
+board = LifeBoard(SparseSetState(convert_to_tuples(simkin_gun,30,10)), rules, disp.width, disp.height)
 
-board = LifeBoard(disp.width, disp.height, BoundaryConditions.WRAP, BoundaryConditions.WRAP)
-
-board.set_cells(convert_to_tuples(simkin_gun, 30, 10))
-print(board.board)
-print("\n-------\n")
 
 while True:
-    board.update()
+    board.run_game()
 
-    draw.rectangle((0, 0, width, height), outline=0, fill=0)
-    for iy in range(height):
-        for ix in range(width):
-            image.putpixel((ix,iy), board.board[iy,ix])
+    
+    image = Image.new("1", (width, height))
+    for c in board.state.grid:
+        image.putpixel((c[0],c[1]), 1)
     disp.image(image)
     disp.show()
 
-    # time.sleep(0.01)
+    time.sleep(1)

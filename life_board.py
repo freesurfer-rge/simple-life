@@ -1,92 +1,94 @@
+# Adapted from
+# https://towardsdatascience.com/from-scratch-the-game-of-life-161430453ee3
+
 from typing import List, Tuple, Union
 
 import numpy as np
 
-from boundary_conditions import BoundaryConditions
+class SparseSetState:
+    def __init__(self, grid):
+        self.grid = grid
+        
+    def copy(self):
+        return SparseSetState(copy(self.grid))
+        
+    def get_neighbours(self, elem, x_max, y_max):
+        # Returns the neighbours of a live cell if they lie
+        # within the bounds of the grid specified
+        l = []
+        if elem[0]-1 >= 0:
+            l.append((elem[0]-1, elem[1]))
+            
+        if elem[0]-1 >= 0 and elem[1]-1 >= 0:
+            l.append((elem[0]-1, elem[1]-1))
+                
+        if elem[0]-1 >= 0 and elem[1]+1 < y_max:
+            l.append((elem[0]-1, elem[1]+1))
 
+        if elem[1]-1 >= 0:
+            l.append((elem[0], elem[1]-1))
 
-def compute_new_state(current_state: np.int8, neighbour_count: np.int8):
-    new_state = 0
+        if elem[1]-1 >= 0 and elem[0]+1 < x_max:
+            l.append((elem[0]+1, elem[1]-1))
 
-    if neighbour_count == 3:
-        new_state = 1  # Born or survives with three neighbours
-    elif current_state == 1 and neighbour_count == 2:
-        new_state = 1  # Also survives with two neighbours
+        if elem[1]+1 < y_max:
+            l.append((elem[0], elem[1]+1))
 
-    return new_state
+        if elem[0]+1 < x_max:
+            l.append((elem[0]+1, elem[1]))
 
+        if elem[1]+1 < y_max and elem[0]+1 < x_max:
+            l.append((elem[0]+1, elem[1]+1))
 
-array_compute_new_state = np.frompyfunc(compute_new_state, 2, 1)
+        return l
+            
+    def equals(self, other):
+        if other is None:
+            return False
+        return self.grid == other.grid
+            
+    def apply_rules(self, rules, x_size, y_size):
+        # Calls the actual rules and provides them with the grid
+        # and the neighbour function
+        self.grid = rules.apply_rules(self.grid, x_size, y_size,self.get_neighbours)
+        return self
+
+        
+class SparseSetRules:
+    def apply_rules(self, grid, x_max, y_max,get_neighbours):
+        #grid = state.grid
+        counter = {}
+
+        # Find all neighbours to active cells
+        # and their counts of active cells
+        for elem in grid:
+            if elem not in counter:
+                counter[elem]=0
+
+            nb = get_neighbours(elem, x_max, y_max)
+
+            for n in nb:
+                if n not in counter:
+                    counter[n] = 1
+                else:
+                    counter[n] += 1
+
+        # Apply rules of Life           
+        for c in counter:
+            if (counter[c] < 2 or  counter[c] > 3) :
+                grid.discard(c)
+            if counter[c] == 3:
+                grid.add(c)
+                
+        return grid
 
 
 class LifeBoard:
-    def __init__(
-        self,
-        n_cells_x: int,
-        n_cells_y: int,
-        x_boundary: BoundaryConditions,
-        y_boundary: BoundaryConditions,
-    ):
-        assert n_cells_x > 0, "Checking n_cells_x"
-        assert n_cells_y > 0, "Checking n_cells_y"
-
-        self._board = np.zeros((n_cells_y, n_cells_x), dtype=np.int8, order="C")
-        self._x_boundary = x_boundary
-        self._y_boundary = y_boundary
-
-    @property
-    def board(self) -> np.ndarray:
-        return self._board
-
-    @property
-    def x_boundary(self) -> BoundaryConditions:
-        return self._x_boundary
-
-    @property
-    def y_boundary(self) -> BoundaryConditions:
-        return self._y_boundary
-
-    def set_cells(self, cell_list: List[Union[Tuple[int, int], List[int]]]):
-        for c in cell_list:
-            assert len(c) == 2, "Checking length"
-            assert c[0] >= 0, "Check x>=0"
-            assert c[0] < self._board.shape[1], "Check x<nx"
-            assert c[1] >= 0, "Check y>=0"
-            assert c[1] < self._board.shape[0], "Check y<ny"
-            self._board[c[1], c[0]] = 1
-
-    def shift_for_neighbours(self, x_shift: int, y_shift: int):
-        assert abs(x_shift) <= 1, "Check x_shift"
-        assert abs(y_shift) <= 1, "Check y_shift"
-        assert not (x_shift == 0 and y_shift == 0), "Don't self-neighbour"
-        assert (
-            self.x_boundary == BoundaryConditions.WRAP
-        ), "Non-wrapping boundaries not supported yet"
-        assert (
-            self.y_boundary == BoundaryConditions.WRAP
-        ), "Non-wrapping boundaries not supported yet"
-
-        shifted_x = np.roll(self.board, shift=x_shift, axis=1)
-        shifted_y = np.roll(shifted_x, shift=y_shift, axis=0)
-
-        return shifted_y
-
-    def get_neighbour_counts(self):
-        shifts = [-1, 0, 1]
-        counts = np.zeros_like(self.board)
-        for i in shifts:
-            for j in shifts:
-                if i != 0 or j != 0:
-                    neighbours = self.shift_for_neighbours(j, i)
-                    counts = counts + neighbours
-        return counts
-
-    def get_next_board(self):
-        neighbours = self.get_neighbour_counts()
-
-        result = array_compute_new_state(self.board, neighbours)
-
-        return result
-
-    def update(self):
-        self._board = self.get_next_board()
+    def __init__(self, initial_state, rules,x_max, y_max):
+        self.state = initial_state
+        self.rules = rules
+        self.x_max = x_max
+        self.y_max = y_max
+        
+    def run_game(self):
+        self.state = self.state.apply_rules(self.rules, self.x_max, self.y_max)
