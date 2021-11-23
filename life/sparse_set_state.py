@@ -19,7 +19,7 @@ class SparseSetState:
         return SparseSetState(copy(self.grid))
 
     def get_neighbours(
-        self, elem: Tuple[int, int], x_max: int, y_max: int
+        self, elem: Tuple[int, int], x_size: int, y_size: int
     ) -> List[Tuple[int, int]]:
         # Returns the neighbours of a live cell if they lie
         # within the bounds of the grid specified
@@ -30,22 +30,22 @@ class SparseSetState:
         if elem[0] - 1 >= 0 and elem[1] - 1 >= 0:
             l.append((elem[0] - 1, elem[1] - 1))
 
-        if elem[0] - 1 >= 0 and elem[1] + 1 < y_max:
+        if elem[0] - 1 >= 0 and elem[1] + 1 < y_size:
             l.append((elem[0] - 1, elem[1] + 1))
 
         if elem[1] - 1 >= 0:
             l.append((elem[0], elem[1] - 1))
 
-        if elem[1] - 1 >= 0 and elem[0] + 1 < x_max:
+        if elem[1] - 1 >= 0 and elem[0] + 1 < x_size:
             l.append((elem[0] + 1, elem[1] - 1))
 
-        if elem[1] + 1 < y_max:
+        if elem[1] + 1 < y_size:
             l.append((elem[0], elem[1] + 1))
 
-        if elem[0] + 1 < x_max:
+        if elem[0] + 1 < x_size:
             l.append((elem[0] + 1, elem[1]))
 
-        if elem[1] + 1 < y_max and elem[0] + 1 < x_max:
+        if elem[1] + 1 < y_size and elem[0] + 1 < x_size:
             l.append((elem[0] + 1, elem[1] + 1))
 
         return l
