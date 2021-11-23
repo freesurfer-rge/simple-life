@@ -11,16 +11,13 @@ import adafruit_ssd1306
 
 import numpy as np
 from life_board import LifeBoard, SparseSetRules, SparseSetState
+
 np.set_printoptions(threshold=sys.maxsize, linewidth=300)
 
 # Define the simple rotor
-rotor = {
-    (16,16),(17,16),(18,16)
-    }
+rotor = {(16, 16), (17, 16), (18, 16)}
 
-glider = {
-    (10,11),(11,11),(12,11),(12,12),(11,13)
-    }
+glider = {(10, 11), (11, 11), (12, 11), (12, 12), (11, 13)}
 
 simkin_gun = [
     "OO.....OO........................",
@@ -43,18 +40,18 @@ simkin_gun = [
     "....................OO...........",
     "....................O............",
     ".....................OOO.........",
-    ".......................O........."
+    ".......................O.........",
 ]
 
 
 def convert_to_tuples(array_of_strings, offset_x, offset_y):
     lengths = [len(s) for s in array_of_strings]
-    assert np.all(np.asarray(lengths)==lengths[0])
-    tuples=set()
+    assert np.all(np.asarray(lengths) == lengths[0])
+    tuples = set()
     for j in range(len(array_of_strings)):
         for i in range(lengths[0]):
-            if array_of_strings[j][i]=='O':
-                tuples.add((i+offset_x, j+offset_y))
+            if array_of_strings[j][i] == "O":
+                tuples.add((i + offset_x, j + offset_y))
     return tuples
 
 
@@ -82,8 +79,8 @@ draw = ImageDraw.Draw(image)
 # Draw a black filled box to clear the image.
 draw.rectangle((0, 0, width, height), outline=0, fill=0)
 
-rules=SparseSetRules()
-state = SparseSetState(convert_to_tuples(simkin_gun,30,10))
+rules = SparseSetRules()
+state = SparseSetState(convert_to_tuples(simkin_gun, 30, 10))
 state = SparseSetState(glider)
 board = LifeBoard(state, rules, disp.width, disp.height)
 
@@ -91,10 +88,9 @@ board = LifeBoard(state, rules, disp.width, disp.height)
 while True:
     board.run_game()
 
-    
     image = Image.new("1", (width, height))
     for c in board.state.grid:
-        image.putpixel((c[0],c[1]), 1)
+        image.putpixel((c[0], c[1]), 1)
     disp.image(image)
     disp.show()
 
