@@ -1,8 +1,8 @@
 # Adapted from
 # https://towardsdatascience.com/from-scratch-the-game-of-life-161430453ee3
 
-from sparse_set_rules import SparseSetRules
-from sparse_set_state import SparseSetState
+from .sparse_set_rules import SparseSetRules
+from .sparse_set_state import SparseSetState
 
 
 class LifeBoard:

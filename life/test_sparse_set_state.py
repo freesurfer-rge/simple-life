@@ -2,7 +2,7 @@ import pytest
 
 from typing import List, Set, Tuple
 
-from sparse_set_state import SparseSetState
+from .sparse_set_state import SparseSetState
 
 
 class TestGetNeighbours:

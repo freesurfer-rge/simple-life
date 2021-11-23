@@ -5,9 +5,10 @@
 
 from copy import copy
 from typing import List, Set, Tuple
-from typing_extensions import ParamSpec
 
-from sparse_set_rules import SparseSetRules
+import numpy as np
+
+from .sparse_set_rules import SparseSetRules
 
 
 class SparseSetState:
@@ -63,3 +64,11 @@ class SparseSetState:
             self.grid, x_size, y_size, self.get_neighbours
         )
         return self
+
+    def to_dense(self, x_size: int, y_size: int) -> np.ndarray:
+        result = np.zeros((y_size, x_size), dtype=np.uint8)
+
+        for c in self.grid:
+            result[c[1], c[0]] = 1
+
+        return result
