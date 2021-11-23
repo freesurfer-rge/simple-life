@@ -1,9 +1,10 @@
 # Reader for files from www.conwaylife.com/wiki
 
+from io import TextIOBase
 from typing import Set, Tuple
 
 
-def read_cells_from_stream(stream) -> Set[Tuple[int, int]]:
+def read_cells_from_stream(stream: TextIOBase) -> Set[Tuple[int, int]]:
     nxt_line = stream.readline()
 
     y_curr = 0
