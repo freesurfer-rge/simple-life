@@ -1,11 +1,18 @@
 from life import LifeBoard, SparseSetRules, SparseSetState
 
-nx = 4
-ny = 4
+nx = 8
+ny = 6
 
-initial_state = {(1, 1)}
+glider = {(2, 3), (3, 3), (4, 3), (4, 4), (3, 5)}
+
 
 rules = SparseSetRules()
-state = SparseSetState(initial_state)
+state = SparseSetState(glider)
+board = LifeBoard(state, rules, nx, ny)
 
-print(state.to_dense(nx, ny))
+print(board.state.to_dense(nx, ny))
+
+for _ in range(16):
+    print("\n--\n")
+    board.update()
+    print(board.state.to_dense(nx,ny))
