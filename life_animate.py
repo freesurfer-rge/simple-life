@@ -1,3 +1,4 @@
+from sys import argv
 from typing import Set, Tuple
 
 from life import (
@@ -29,8 +30,8 @@ def write_image(cells: Set[Tuple[int, int]], name: str):
     image.save(name)
 
 
-def main():
-    with open("life/pattern_files/simkinglidergun.cells", "r") as pf:
+def main(target_file):
+    with open(target_file, "r") as pf:
         pattern_from_file = read_cells_from_stream(pf)
 
     print("Read initial file")
@@ -53,4 +54,4 @@ def main():
     )
 
 
-main()
+main(argv[1])
