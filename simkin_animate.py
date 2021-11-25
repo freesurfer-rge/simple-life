@@ -11,10 +11,10 @@ from life import (
 from PIL import Image, ImageDraw
 
 
-nx = 512
-ny = 512
-dx = 250
-dy = 250
+nx = 256
+ny = 256
+dx = 120
+dy = 120
 
 
 def get_image(cells: Set[Tuple[int, int]]) -> Image:
@@ -44,7 +44,7 @@ def main():
     state = SparseSetState(initial_pattern)
     board = LifeBoard(state, rules, nx, ny, x_wrap=True, y_wrap=True)
 
-    for _ in range(1000):
+    for _ in range(10000):
         board.update()
         images.append(get_image(board.state.grid))
 
