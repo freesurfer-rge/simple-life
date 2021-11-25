@@ -147,6 +147,7 @@ class TestGetNeighboursWrap5x5:
     ):
         assert isinstance(actual, list)
         assert len(expected) == 8  # With wrapping, always have 8 neighbours
+        assert len(actual) == 8
         # Compare sets, since the neighbour order shouldn't matter
         assert set(actual) == expected
 
@@ -223,5 +224,67 @@ class TestGetNeighboursWrap5x5:
         ids=["(2,1)", "(1,2)", "(2,3)", "(3,2)"],
     )
     def test_touch_edge(self, cell, expected):
+        actual = self.fetch_neighbours(cell)
+        self.check_neighbours(actual, expected)
+
+    @pytest.mark.parametrize(
+        "cell,expected",
+        [
+            (
+                (2, 0),
+                {
+                    (1, 4),
+                    (2, 4),
+                    (3, 4),
+                    (1, 0),
+                    (3, 0),
+                    (1, 1),
+                    (2, 1),
+                    (3, 1),
+                },
+            ),
+            (
+                (0, 2),
+                {
+                    (4, 1),
+                    (4, 2),
+                    (4, 3),
+                    (0, 1),
+                    (0, 3),
+                    (1, 1),
+                    (1, 2),
+                    (1, 3),
+                },
+            ),
+            (
+                (2, 4),
+                {
+                    (1, 3),
+                    (2, 3),
+                    (3, 3),
+                    (1, 4),
+                    (3, 4),
+                    (1, 0),
+                    (2, 0),
+                    (3, 0),
+                },
+            ),
+            (
+                (4, 2),
+                {
+                    (3, 1),
+                    (3, 2),
+                    (3, 3),
+                    (4, 1),
+                    (4, 3),
+                    (0, 1),
+                    (0, 2),
+                    (0, 3),
+                },
+            ),
+        ],
+        ids=["(2,0)", "(0,2)", "(2,4)", "(4,2)"],
+    )
+    def test_overlap_edge(self, cell, expected):
         actual = self.fetch_neighbours(cell)
         self.check_neighbours(actual, expected)
