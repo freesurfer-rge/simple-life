@@ -65,7 +65,7 @@ class TestGetNeighboursNoWrap:
         self.check_neighbours(actual, expected)
 
 
-class TestGetNeighboursWrap:
+class TestGetNeighboursWrap3x3:
     def check_neighbours(
         self, actual: List[Tuple[int, int]], expected: Set[Tuple[int, int]]
     ):
@@ -130,4 +130,223 @@ class TestGetNeighboursWrap:
             (2, 1),
             (2, 2),
         }
+        self.check_neighbours(actual, expected)
+
+
+class TestGetNeighboursWrap5x5:
+    def fetch_neighbours(self, target_cell: Tuple[int, int]):
+        target = SparseSetState({})
+
+        neighbours = target.get_neighbours(
+            target_cell, 5, 5, x_wrap=True, y_wrap=True
+        )
+        return neighbours
+
+    def check_neighbours(
+        self, actual: List[Tuple[int, int]], expected: Set[Tuple[int, int]]
+    ):
+        assert isinstance(actual, list)
+        assert len(expected) == 8  # With wrapping, always have 8 neighbours
+        assert len(actual) == 8
+        # Compare sets, since the neighbour order shouldn't matter
+        assert set(actual) == expected
+
+    def test_check_centre(self):
+        actual = self.fetch_neighbours(target_cell=(2, 2))
+        expected = {
+            (1, 1),
+            (2, 1),
+            (3, 1),
+            (1, 2),
+            (3, 2),
+            (1, 3),
+            (2, 3),
+            (3, 3),
+        }
+        self.check_neighbours(actual, expected)
+
+    @pytest.mark.parametrize(
+        "cell,expected",
+        [
+            (
+                (2, 1),
+                {
+                    (1, 0),
+                    (2, 0),
+                    (3, 0),
+                    (1, 1),
+                    (3, 1),
+                    (1, 2),
+                    (2, 2),
+                    (3, 2),
+                },
+            ),
+            (
+                (1, 2),
+                {
+                    (0, 1),
+                    (0, 2),
+                    (0, 3),
+                    (1, 1),
+                    (1, 3),
+                    (2, 1),
+                    (2, 2),
+                    (2, 3),
+                },
+            ),
+            (
+                (2, 3),
+                {
+                    (1, 2),
+                    (2, 2),
+                    (3, 2),
+                    (1, 3),
+                    (3, 3),
+                    (1, 4),
+                    (2, 4),
+                    (3, 4),
+                },
+            ),
+            (
+                (3, 2),
+                {
+                    (2, 1),
+                    (2, 2),
+                    (2, 3),
+                    (3, 1),
+                    (3, 3),
+                    (4, 1),
+                    (4, 2),
+                    (4, 3),
+                },
+            ),
+        ],
+        ids=["(2,1)", "(1,2)", "(2,3)", "(3,2)"],
+    )
+    def test_touch_edge(self, cell, expected):
+        actual = self.fetch_neighbours(cell)
+        self.check_neighbours(actual, expected)
+
+    @pytest.mark.parametrize(
+        "cell,expected",
+        [
+            (
+                (2, 0),
+                {
+                    (1, 4),
+                    (2, 4),
+                    (3, 4),
+                    (1, 0),
+                    (3, 0),
+                    (1, 1),
+                    (2, 1),
+                    (3, 1),
+                },
+            ),
+            (
+                (0, 2),
+                {
+                    (4, 1),
+                    (4, 2),
+                    (4, 3),
+                    (0, 1),
+                    (0, 3),
+                    (1, 1),
+                    (1, 2),
+                    (1, 3),
+                },
+            ),
+            (
+                (2, 4),
+                {
+                    (1, 3),
+                    (2, 3),
+                    (3, 3),
+                    (1, 4),
+                    (3, 4),
+                    (1, 0),
+                    (2, 0),
+                    (3, 0),
+                },
+            ),
+            (
+                (4, 2),
+                {
+                    (3, 1),
+                    (3, 2),
+                    (3, 3),
+                    (4, 1),
+                    (4, 3),
+                    (0, 1),
+                    (0, 2),
+                    (0, 3),
+                },
+            ),
+        ],
+        ids=["(2,0)", "(0,2)", "(2,4)", "(4,2)"],
+    )
+    def test_overlap_edge(self, cell, expected):
+        actual = self.fetch_neighbours(cell)
+        self.check_neighbours(actual, expected)
+
+    @pytest.mark.parametrize(
+        "cell,expected",
+        [
+            (
+                (0, 0),
+                {
+                    (4, 4),
+                    (0, 4),
+                    (1, 4),
+                    (4, 0),
+                    (1, 0),
+                    (4, 1),
+                    (0, 1),
+                    (1, 1),
+                },
+            ),
+            (
+                (0, 4),
+                {
+                    (4, 3),
+                    (0, 3),
+                    (1, 3),
+                    (4, 4),
+                    (1, 4),
+                    (4, 0),
+                    (0, 0),
+                    (1, 0),
+                },
+            ),
+            (
+                (4, 0),
+                {
+                    (3, 4),
+                    (4, 4),
+                    (0, 4),
+                    (3, 0),
+                    (0, 0),
+                    (3, 1),
+                    (4, 1),
+                    (0, 1),
+                },
+            ),
+            (
+                (4, 4),
+                {
+                    (3, 3),
+                    (4, 3),
+                    (0, 3),
+                    (3, 4),
+                    (0, 4),
+                    (3, 0),
+                    (4, 0),
+                    (0, 0),
+                },
+            ),
+        ],
+        ids=["(0,0)", "(0,4)", "(4,0)", "(4,4)"],
+    )
+    def test_overlap_corner(self, cell, expected):
+        actual = self.fetch_neighbours(cell)
         self.check_neighbours(actual, expected)
