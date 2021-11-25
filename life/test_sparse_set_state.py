@@ -288,3 +288,65 @@ class TestGetNeighboursWrap5x5:
     def test_overlap_edge(self, cell, expected):
         actual = self.fetch_neighbours(cell)
         self.check_neighbours(actual, expected)
+
+    @pytest.mark.parametrize(
+        "cell,expected",
+        [
+            (
+                (0, 0),
+                {
+                    (4, 4),
+                    (0, 4),
+                    (1, 4),
+                    (4, 0),
+                    (1, 0),
+                    (4, 1),
+                    (0, 1),
+                    (1, 1),
+                },
+            ),
+            (
+                (0, 4),
+                {
+                    (4, 3),
+                    (0, 3),
+                    (1, 3),
+                    (4, 4),
+                    (1, 4),
+                    (4, 0),
+                    (0, 0),
+                    (1, 0),
+                },
+            ),
+            (
+                (4, 0),
+                {
+                    (3, 4),
+                    (4, 4),
+                    (0, 4),
+                    (3, 0),
+                    (0, 0),
+                    (3, 1),
+                    (4, 1),
+                    (0, 1),
+                },
+            ),
+            (
+                (4, 4),
+                {
+                    (3, 3),
+                    (4, 3),
+                    (0, 3),
+                    (3, 4),
+                    (0, 4),
+                    (3, 0),
+                    (4, 0),
+                    (0, 0),
+                },
+            ),
+        ],
+        ids=["(0,0)", "(0,4)", "(4,0)", "(4,4)"],
+    )
+    def test_overlap_corner(self, cell, expected):
+        actual = self.fetch_neighbours(cell)
+        self.check_neighbours(actual, expected)
